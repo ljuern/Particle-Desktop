@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     canvas.height = window.innerHeight;
 
     const particlesArray = [];
-    let touch = {
+    let mouse = {
         x: null,
         y: null,
         speed: 0,
@@ -13,20 +13,19 @@ document.addEventListener("DOMContentLoaded", () => {
         lastY: null
     };
 
-    // Event listener to capture touch movement
-    canvas.addEventListener('touchmove', (event) => {
-        const touchEvent = event.touches[0];
-        if (touch.lastX && touch.lastY) {
-            const dx = touchEvent.clientX - touch.lastX;
-            const dy = touchEvent.clientY - touch.lastY;
-            touch.speed = Math.sqrt(dx * dx + dy * dy);
+    // Event listener to capture mouse movement
+    canvas.addEventListener('mousemove', (event) => {
+        if (mouse.lastX && mouse.lastY) {
+            const dx = event.x - mouse.lastX;
+            const dy = event.y - mouse.lastY;
+            mouse.speed = Math.sqrt(dx * dx + dy * dy);
         }
-        touch.x = touchEvent.clientX;
-        touch.y = touchEvent.clientY;
-        touch.lastX = touchEvent.clientX;
-        touch.lastY = touchEvent.clientY;
+        mouse.x = event.x;
+        mouse.y = event.y;
+        mouse.lastX = event.x;
+        mouse.lastY = event.y;
         for (let i = 0; i < 5; i++) {
-            particlesArray.push(new Particle(touch.x, touch.y, touch.speed));
+            particlesArray.push(new Particle());
         }
     });
 
@@ -40,13 +39,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Particle class
     class Particle {
-        constructor(x, y, speed) {
-            this.x = x;
-            this.y = y;
+        constructor() {
+            this.x = mouse.x;
+            this.y = mouse.y;
             this.size = Math.random() * 5 + 1;
             this.speedX = Math.random() * 3 - 1.5;
             this.speedY = Math.random() * 3 - 1.5;
-            this.color = getColorBasedOnSpeed(speed);
+            this.color = getColorBasedOnSpeed(mouse.speed);
         }
 
         update() {
@@ -87,5 +86,5 @@ document.addEventListener("DOMContentLoaded", () => {
         canvas.height = window.innerHeight;
     });
 
-    console.log("Touch-enabled particle system initialized");
+    console.log("Particle system initialized");
 });
